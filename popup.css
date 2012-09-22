@@ -1,0 +1,84 @@
+body {
+    padding-top: 3px;
+    min-width: 330px;
+    font-size: 0.8em;
+}
+
+
+/* all about link */
+a {
+    text-decoration: none;
+    color: #51A351;
+}
+
+a:hover {
+    color: white;
+    background-color: #51A351;
+}
+
+#jump_a {
+    color: white;
+    background-color: #51A351;
+}
+
+#jump_a:hover {
+    background-color: #408140;
+}
+
+#white:hover {
+    background-color: white;
+}
+
+#audio_img:hover {
+    background-color: #E6E6E6;
+}
+
+
+/* search area */
+#input {
+    width: 150px;
+}
+
+#jump {
+    position: relative;
+    left: 1em;
+    font-size: 1em;
+}
+
+.invisible {
+    display: none;
+}
+
+
+/* definition area */
+#definition {
+    margin-top: 0.8em;
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+.word {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+#logo_word, .word {
+    color: #C09;
+}
+
+#zh_definition {
+    
+}
+
+
+/* header and footer */
+#header, #about {
+    text-align: right;
+    line-height: 0;
+}
+
+#logo {
+    position: absolute;
+    top: 0.6em;
+    right: 16.5em;
+}
