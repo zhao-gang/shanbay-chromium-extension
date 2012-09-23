@@ -70,6 +70,7 @@ function addWord() {
     var a = getFirstChildWithTagName(jump, 'a');
     var request = new XMLHttpRequest();
     var add_url = 'http://www.shanbay.com/api/learning/add/' + a.title;
+    jump.innerHTML = '添加中...';
     request.open('GET', add_url);
     request.onreadystatechange = function () {
         if (request.readyState === 4) {
