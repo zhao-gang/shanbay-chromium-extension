@@ -95,10 +95,14 @@ function queryOk(response) {
     var voc = response.voc;
     // word and pronouncation
     var content = document.getElementById('content');
-    content.innerHTML = voc.content;
+    content.innerHTML = voc.content + ' ';
     if (voc.pron.length != 0) {
 	var pron = document.getElementById('pron');
-        pron.innerHTML = '[' + voc.pron + ']';
+	// if word too long, put pronouncation in the next line
+	if (voc.content.length > 13)
+            pron.innerHTML = '<br />[' + voc.pron + ']';
+	else
+	    pron.innerHTML = '[' + voc.pron + '] ';
     }
     if (voc.audio.length != 0) {
 	var a = document.createElement('a');
@@ -117,8 +121,6 @@ function queryOk(response) {
     // chinese definition
     var zh_definition = document.getElementById('zh_definition');
     zh_definition.innerHTML = voc.definition;
-    // english definition
-    // var en_definition = document.createElement('div');
     // jump
     var jump = document.getElementById('jump');
     if (learning_id != 0) {
@@ -145,7 +147,7 @@ function queryNotFound(word) {
     // clear jump area
     document.getElementById('jump').innerHTML = '';
     var tips = document.getElementById('tips');
-    tips.innerHTML = '<p><span class="word">' + word + '</span> 没有找到。';
+    tips.innerHTML = '<p><span class="word">' + word + '</span> 没有找到。</p>';
 }
 
 function query(word) {

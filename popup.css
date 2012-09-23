@@ -1,6 +1,6 @@
 body {
     padding-top: 3px;
-    min-width: 330px;
+    width: 330px;
     font-size: 0.8em;
 }
 
@@ -58,7 +58,7 @@ a:hover {
 }
 
 .word {
-    font-size: 1.5em;
+    font-size: 1.4em;
     font-weight: bold;
 }
 
