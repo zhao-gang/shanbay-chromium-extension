@@ -7,6 +7,26 @@ function getFirstChildWithTagName(element, tagName) {
     }
 }
 
+function clearArea(area) {
+    if (area == 'definition') {
+	document.getElementById('content').innerHTML = '';
+	document.getElementById('pron').innerHTML = '';
+	document.getElementById('sound').innerHTML = '';
+	document.getElementById('a_click').innerHTML = '';
+	document.getElementById('zh_definition').innerHTML = '';
+	return null;
+    }
+    document.getElementById(area).innerHTML = '';
+}
+
+function showTips(message) {
+    var tips = document.getElementById('tips');
+    if (message.length == 0)
+	clearArea('tips');
+    else
+	tips.innerHTML = '<p>' + message + '</p>';
+}
+
 function loggedIn(nick_name) {
     var status = document.getElementById('status');
     var user_link = document.createElement('a');
@@ -14,7 +34,7 @@ function loggedIn(nick_name) {
     user_link.setAttribute('href', user_home);
     user_link.setAttribute('target', '_newtab');
     user_link.appendChild(document.createTextNode(nick_name + '的空间'));
-    status.innerHTML = '';
+    clearArea('status');
     status.appendChild(user_link);
 }
 
@@ -25,17 +45,12 @@ function loggedOut() {
     login_link.setAttribute('href', login_url);
     login_link.setAttribute('target', '_newtab');
     login_link.appendChild(document.createTextNode('登录'));
-    status.innerHTML = '';
+    clearArea('status');
     status.appendChild(login_link);
     // body area
     var search_area = document.getElementById('search_area');
     search_area.setAttribute('class', 'invisible');
-    var tips = document.getElementById('tips');
-    tips.setAttribute('class', 'invisible');
-    var definition = document.getElementById('definition');
-    var info = document.createElement('p');
-    info.appendChild(document.createTextNode('请点击右上角链接登录，登录后才能查词'));
-    definition.appendChild(info);
+    showTips('请点击右上角链接登录，登录后才能查词');
 }
 
 function check() {
@@ -43,8 +58,7 @@ function check() {
     var status = document.getElementById('status');
     status.innerHTML = '正在检查...';
     // tips area
-    var tips = document.getElementById('tips');
-    tips.innerHTML = '<p>提示：使用回车键搜索，点击喇叭图标发音</p>';
+    showTips('提示：使用回车键搜索，点击喇叭图标发音');
     var request = new XMLHttpRequest();
     var check_url = 'http://www.shanbay.com/api/user/info/';
     request.open('GET', check_url);
@@ -75,7 +89,7 @@ function addWord() {
     request.onreadystatechange = function () {
         if (request.readyState === 4) {
             var learning_id = JSON.parse(request.responseText).id;
-            jump.innerHTML = '';
+	    clearArea('jump');
             jump.appendChild(document.createTextNode('已添加，'));
             var check_link = 'http://www.shanbay.com/learning/';
             var check = document.createElement('a');
@@ -91,7 +105,7 @@ function addWord() {
 
 function queryOk(response) {
     // clear tips area
-    document.getElementById('tips').innerHTML = '';
+    showTips('');
     var learning_id = response.learning_id;
     var voc = response.voc;
     // word and pronouncation
@@ -146,23 +160,15 @@ function queryOk(response) {
 
 function queryNotFound(word) {
     // clear jump area
-    document.getElementById('jump').innerHTML = '';
-    var tips = document.getElementById('tips');
-    tips.innerHTML = '<p><span class="word">' + word + '</span> 没有找到。</p>';
+    clearArea('jump');
+    showTips('<span class="word">' + word + '</span> 没有找到。');
 }
 
 function query(word) {
     // show this let user don't panic
-    var tips = document.getElementById('tips');
-    tips.innerHTML = '<p>查询中...</p>';
-    // clear jump area
-    document.getElementById('jump').innerHTML = '';
-    // clear definition area
-    document.getElementById('content').innerHTML = '';
-    document.getElementById('pron').innerHTML = '';
-    document.getElementById('sound').innerHTML = '';
-    document.getElementById('a_click').innerHTML = '';
-    document.getElementById('zh_definition').innerHTML = '';
+    showTips('查询中...');
+    clearArea('jump');
+    clearArea('definition');
     var request = new XMLHttpRequest();
     var query_url = 'http://www.shanbay.com/api/word/' + word;
     request.open('GET', query_url);
@@ -179,37 +185,51 @@ function query(word) {
 }
 
 function parse(input) {
-    var re = /[^a-zA-Z ]+/;
+    var re = /[^a-zA-Z ]+/g;
     input = input.replace(re, '');
-    var word = input.replace(/ +/, ' ');
-    return word;
+    if (input.length == 0 || input.search(/^ +$/) != -1)
+	// have no valid character 
+	return null;
+    else {
+	var word = input.replace(/ +/, ' ');
+	word = word.replace(/^ +| +$/, '');
+	return word;
+    }
 }
 
 function click() {
-    var input = document.getElementById('input');
-    if (input.value.length != 0)
-        query(parse(input.value));
+    var input = document.getElementById('input').value;
+    var word = parse(input);
+    if (word == null) {
+	clearArea('definition');
+	showTips('<span class="color">英文字符</span>和<span class="color">空格</span>为有效的关键字，请重新输入');
+    }
+    else
+	query(word);
     document.getElementById('input').focus();
 }
 
 function keydown() {
     if (event.keyCode == 13) {
-        var input = document.getElementById('input');
-        input = input.value;
-	input.replace('\n', '');
-	if (input.length != 0)
-            query(parse(input));
+        var input = document.getElementById('input').value;
+	var word = parse(input);
+	if (word == null) {
+	    clearArea('definition');
+	    showTips('<span class="color">英文字符</span>和<span class="color">空格</span>为有效的关键字，请重新输入');
+	}
+	else
+	    query(word);
     }
 }
 
 function playSound() {
     var sound = document.getElementById('sound');
     var audio = document.createElement('audio');
-    // sound api has changed, remade by my hand
+    // sound api has changed, url made by my own hand
     var sound_url = 'http://media.shanbay.com/audio/$country/$word.mp3';
     // now hard coded to use American english
     var country = 'us';
-    // find word name from a's title
+    // find word name from element a's title
     var a_click = document.getElementById('a_click');
     var a = getFirstChildWithTagName(a_click, 'a');
     // get word and change space to underscore to generate the url
