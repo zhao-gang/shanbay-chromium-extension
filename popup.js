@@ -196,6 +196,7 @@ function keydown() {
     if (event.keyCode == 13) {
         var input = document.getElementById('input');
         input = input.value;
+	input.replace('\n', '');
 	if (input.length != 0)
             query(parse(input));
     }
