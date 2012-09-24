@@ -201,6 +201,7 @@ function click() {
     var input = document.getElementById('input').value;
     var word = parse(input);
     if (word == null) {
+	clearArea('jump');
 	clearArea('definition');
 	showTips('<span class="color">英文字符</span>和<span class="color">空格</span>为有效的关键字，请重新输入');
     }
@@ -214,6 +215,7 @@ function keydown() {
         var input = document.getElementById('input').value;
 	var word = parse(input);
 	if (word == null) {
+	    clearArea('jump');
 	    clearArea('definition');
 	    showTips('<span class="color">英文字符</span>和<span class="color">空格</span>为有效的关键字，请重新输入');
 	}
