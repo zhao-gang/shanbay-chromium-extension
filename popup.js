@@ -54,6 +54,8 @@ function loggedOut() {
 }
 
 function check() {
+    // focus on input area
+    document.getElementById('input').focus();
     // status area
     var status = document.getElementById('status');
     status.innerHTML = '正在检查...';
