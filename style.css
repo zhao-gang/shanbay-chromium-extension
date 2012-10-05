@@ -4,6 +4,10 @@ body {
     font-size: 0.8em;
 }
 
+ol {
+    margin: 0;
+    padding-left: 30px;
+}
 
 /* all about link */
 a {
@@ -25,11 +29,8 @@ a:hover {
     background-color: #408140;
 }
 
-#white:hover {
-    background-color: white;
-}
-
-#audio_img:hover {
+#horn:hover {
+    cursor: pointer;
     background-color: #E6E6E6;
 }
 
@@ -66,8 +67,12 @@ a:hover {
     color: #C09;
 }
 
-#zh_definition {
-    
+#zh_trans {
+    margin-top: 0.3em;
+}
+
+.part-of-speech {
+    margin-top: 0.3em;
 }
 
 
@@ -81,4 +86,31 @@ a:hover {
     position: absolute;
     top: 0.6em;
     right: 16.5em;
+}
+
+
+/* options page */
+#options_content {
+    border-color: #ABD;
+    border-style: solid;
+    border-width: 4px;
+    padding: 8px;
+    margin: 0 auto 0 auto;
+    width: 300px;
+}
+
+#message {
+    position: absolute;
+    top: 1em;
+    background-color: #FEA;
+    font-size: 0.6em;
+}
+
+#return {
+    position: relative;
+    left: 8em;
+}
+
+h4 {
+    margin: 1em 0 1em 0;
 }

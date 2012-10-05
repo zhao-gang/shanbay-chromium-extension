@@ -1,5 +1,7 @@
+
+
 function getFirstChildWithTagName(element, tagName) {
-    tagName = tagName.toUpperCase();
+    var tagName = tagName.toUpperCase();
     var childs = element.childNodes;
     for(var i = 0; i < childs.length; i++) {
         if (childs[i].nodeName == tagName)
@@ -7,17 +9,19 @@ function getFirstChildWithTagName(element, tagName) {
     }
 }
 
+
 function clearArea(area) {
     if (area == 'definition') {
 	document.getElementById('content').innerHTML = '';
 	document.getElementById('pron').innerHTML = '';
 	document.getElementById('sound').innerHTML = '';
-	document.getElementById('a_click').innerHTML = '';
-	document.getElementById('zh_definition').innerHTML = '';
+	document.getElementById('zh_trans').innerHTML = '';
+	document.getElementById('en_trans').innerHTML = '';
 	return null;
     }
     document.getElementById(area).innerHTML = '';
 }
+
 
 function showTips(message) {
     var tips = document.getElementById('tips');
@@ -26,6 +30,7 @@ function showTips(message) {
     else
 	tips.innerHTML = '<p>' + message + '</p>';
 }
+
 
 function loggedIn(nick_name) {
     var status = document.getElementById('status');
@@ -37,6 +42,7 @@ function loggedIn(nick_name) {
     clearArea('status');
     status.appendChild(user_link);
 }
+
 
 function loggedOut() {
     var status = document.getElementById('status');
@@ -53,14 +59,15 @@ function loggedOut() {
     showTips('请点击右上角链接登录，登录后才能查词');
 }
 
-function check() {
+
+function checkLoginStatus() {
     // focus on input area
     document.getElementById('input').focus();
     // status area
     var status = document.getElementById('status');
     status.innerHTML = '正在检查...';
     // tips area
-    showTips('提示：使用回车键搜索，点击喇叭图标发音');
+    showTips('提示：使用回车键搜索更快捷，点击选项可以自定义设置');
     var request = new XMLHttpRequest();
     var check_url = 'http://www.shanbay.com/api/user/info/';
     request.open('GET', check_url);
@@ -80,6 +87,7 @@ function check() {
     };
     request.send(null);
 }
+
 
 function addWord() {
     var jump = document.getElementById('jump');
@@ -105,11 +113,39 @@ function addWord() {
     request.send(null);
 }
 
+
+function showEnDefinitions(en_definitions) {
+    var en_trans = document.getElementById('en_trans');
+    for (var i in en_definitions) {
+	var div = document.createElement('div');
+	div.setAttribute('class', 'part-of-speech');
+	div.innerHTML = '<strong>' + i + '</strong>';
+	var ol = document.createElement('ol');
+	for (var j = 0; j < en_definitions[i].length; j++) {
+	    var li = document.createElement('li');
+	    li.innerText = en_definitions[i][j];
+	    ol.appendChild(li);
+	}
+	en_trans.appendChild(div);
+	en_trans.appendChild(ol);
+    }
+}
+
+
 function queryOk(response) {
     // clear tips area
     showTips('');
+    // check localStorage
+    var storage = localStorage.getItem('options');
+    // first time run, set localStorage to default 
+    if (storage.search('definitions') == -1) {
+	storage = 'zh_definitions';
+	localStorage.setItem('options', storage);
+    }
+
     var learning_id = response.learning_id;
     var voc = response.voc;
+
     // word and pronouncation
     var content = document.getElementById('content');
     content.innerHTML = voc.content + ' ';
@@ -121,24 +157,32 @@ function queryOk(response) {
 	else
 	    pron.innerHTML = '[' + voc.pron + '] ';
     }
+
+    // if audio is available
     if (voc.audio.length != 0) {
-	var a = document.createElement('a');
-	a.setAttribute('href', '#');
-	// change phrase to be a valid title name
-	var title_name = voc.content.replace(/ /g, '_');
-	a.setAttribute('id', 'white');
-	a.setAttribute('title', title_name);
+	var alt = voc.content;
         var img = document.createElement('img');
         img.setAttribute('src', 'static/audio.png');
-        img.setAttribute('id', 'audio_img');
-	a.appendChild(img);
-	var a_click = document.getElementById('a_click');
-        a_click.appendChild(a);
+        img.setAttribute('id', 'horn');
+	img.setAttribute('alt', alt);
+	var sound = document.getElementById('sound');
+        sound.appendChild(img);
+	// if auto play sound option is set
+	if (storage.search('auto') != -1)
+	    playSound();
     }
-    // chinese definition
-    var zh_definition = document.getElementById('zh_definition');
-    zh_definition.innerHTML = voc.definition;
-    // jump
+
+    // whether show chinese definition
+    if (storage.search('zh_definitions') != -1) {
+	var zh_trans = document.getElementById('zh_trans');
+	zh_trans.innerHTML = voc.definition;
+    }
+
+    // whether show english definition
+    if (storage.search('en_definitions') != -1)
+	showEnDefinitions(voc.en_definitions);
+
+    // jump area
     var jump = document.getElementById('jump');
     if (learning_id != 0) {
         var check_link = 'http://www.shanbay.com/learning/';
@@ -227,29 +271,29 @@ function keydown() {
 }
 
 function playSound() {
-    var sound = document.getElementById('sound');
     var audio = document.createElement('audio');
     // sound api has changed, url made by my own hand
     var sound_url = 'http://media.shanbay.com/audio/$country/$word.mp3';
     // now hard coded to use American english
     var country = 'us';
-    // find word name from element a's title
-    var a_click = document.getElementById('a_click');
-    var a = getFirstChildWithTagName(a_click, 'a');
+    // find word name from element img's alt attribute
+    var audio_img = document.getElementById('horn');
     // get word and change space to underscore to generate the url
-    var word = a.title.replace(/ /g, '_');
+    var word = audio_img.alt.replace(/ /g, '_');
     sound_url = sound_url.replace('$country', country);
     sound_url = sound_url.replace('$word', word);
     audio.setAttribute('src', sound_url);
     audio.setAttribute('autoplay', 'true');
+    var sound = document.getElementById('sound');
     sound.appendChild(audio);
     document.getElementById('input').focus();
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    check();
+    checkLoginStatus();
     document.querySelector('button').addEventListener('click', click);
     document.querySelector('input').addEventListener('keydown', keydown);
     document.querySelector('#jump').addEventListener('click', addWord);
-    document.querySelector('#a_click').addEventListener('click', playSound);
+    document.querySelector('#sound').addEventListener('click', playSound);
+    document.querySelector('#sound').addEventListener('mouseover', playSound);
 });
