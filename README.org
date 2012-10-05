@@ -1,6 +1,6 @@
 * Chromium 浏览器上的扇贝网查词插件
 ** 描述
-   使用 Chromium 浏览器扩展的第二版规则编写，支持发音，可以保存单词到个人词库。
+   根据扇贝网 API 编写的查词插件，能添加单词到个人词库，可以自定义设置显示中英文释义，自动发音功能。
 ** 安装
    访问 [[https://chrome.google.com/webstore/detail/occofkaolkiibmfpenkhkgbdpmhigbhp][谷歌商店]] 安装最新版插件，或者在谷歌商店里搜索“扇贝查词”，可能需要代理才能正常访问。
 ** Todo
