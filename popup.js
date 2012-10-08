@@ -108,6 +108,7 @@ function addWord() {
             check.setAttribute('target', '_newtab');
             check.appendChild(document.createTextNode('查看'));
             jump.appendChild(check);
+	    document.getElementById('input').focus();
         }
     };
     request.send(null);
