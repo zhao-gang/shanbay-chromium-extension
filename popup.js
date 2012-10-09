@@ -153,7 +153,7 @@ function queryOk(response) {
     if (voc.pron.length != 0) {
 	var pron = document.getElementById('pron');
 	// if word too long, put pronouncation in the next line
-	if (voc.content.length > 13)
+	if (voc.content.length > 11)
             pron.innerHTML = '<br />[' + voc.pron + ']';
 	else
 	    pron.innerHTML = '[' + voc.pron + '] ';
