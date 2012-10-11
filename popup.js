@@ -138,8 +138,8 @@ function queryOk(response) {
     showTips('');
     // check localStorage
     var storage = localStorage.getItem('options');
-    // first time run, set localStorage to default 
-    if (storage.search('definitions') == -1) {
+    // first time run, set localStorage to default
+    if ((storage == null) || (storage.search('definitions') == -1)) {
 	storage = 'zh_definitions';
 	localStorage.setItem('options', storage);
     }
