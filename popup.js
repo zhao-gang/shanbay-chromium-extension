@@ -1,5 +1,4 @@
 
-
 function getFirstChildWithTagName(element, tagName) {
     var tagName = tagName.toUpperCase();
     var childs = element.childNodes;
@@ -101,7 +100,7 @@ function addWord() {
             var learning_id = JSON.parse(request.responseText).id;
 	    clearArea('jump');
             jump.appendChild(document.createTextNode('已添加，'));
-            var check_link = 'http://www.shanbay.com/learning/';
+            var check_link = 'http://www.shanbay.com/review/learning/';
             var check = document.createElement('a');
 	    check.setAttribute('id', 'jump_a');
             check.setAttribute('href', check_link + learning_id);
@@ -186,7 +185,7 @@ function queryOk(response) {
     // jump area
     var jump = document.getElementById('jump');
     if (learning_id != 0) {
-        var check_link = 'http://www.shanbay.com/learning/';
+        var check_link = 'http://www.shanbay.com/review/learning/';
         var check = document.createElement('a');
 	check.setAttribute('id', 'jump_a');
         check.setAttribute('href', check_link + learning_id);
