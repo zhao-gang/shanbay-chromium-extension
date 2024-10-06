@@ -1,4 +1,4 @@
-*此项目不再维护* ，可以选择使用下面的 chrome 插件：
+* 此项目不再维护，可以选择使用下面的 chrome 插件：
 
 https://github.com/maicss/chrome-shanbay-v2
 
